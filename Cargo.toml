@@ -1,6 +1,6 @@
 [workspace]
-members = ["programs/*",]
-exclude = ["sgx-function",]
+members = ["programs/*","sgx-function/"]
+# exclude = ["sgx-function",]
 resolver = "2"
 
 
