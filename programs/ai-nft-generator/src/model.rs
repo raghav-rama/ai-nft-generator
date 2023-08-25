@@ -54,8 +54,12 @@ impl From<NftMetadataBorsh> for NftMetadata {
 }
 
 #[repr(packed)]
-#[zero_copy(unsafe)]
+#[account(zero_copy(unsafe))]
 pub struct MyOracleState {
     pub bump: u8,
     pub nft: NftMetadata,
+}
+
+impl MyProgramState {
+    let LEN = 8;
 }

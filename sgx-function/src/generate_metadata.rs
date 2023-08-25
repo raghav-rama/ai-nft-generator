@@ -46,6 +46,7 @@ pub struct File {
     pub cdn: Option<String>,
 }
 
+// "content": "This is a Metaplex NFT standard. It contains the following attributes:\n\nName: Metaplex NFT Standard\nSymbol: MPT\nDescription: This is a standard for NFTs on the Metaplex platform.\nImage: https://www.metaplex.com/images/logo.png\nAnimationUrl: https://www.metaplex.com/images/logo.png\nExternalUrl: https://www.metaplex.com\nAttributes: [\"trait_type\": \"category\", \"value\": \"image\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"]\nProperties: [\"files\": [\"uri\": \"https://www.metaplex.com/images/logo.png\", \"type\": \"image/png\", \"cdn\": \"https://www.metaplex.com/images/logo.png\"], \"category\": \"image\"]\n\nGenerate some random NFT Data"
 impl MetaplexNftStandard {
     pub async fn get_data() -> std::result::Result<MetaplexNftStandard, SwitchboardClientError> {
         let api_key = get_openai_api_key();
@@ -64,7 +65,6 @@ impl MetaplexNftStandard {
                 {
                     "role": "user",
                     "content": "Name some cool NFT Projects"
-                    // "content": "This is a Metaplex NFT standard. It contains the following attributes:\n\nName: Metaplex NFT Standard\nSymbol: MPT\nDescription: This is a standard for NFTs on the Metaplex platform.\nImage: https://www.metaplex.com/images/logo.png\nAnimationUrl: https://www.metaplex.com/images/logo.png\nExternalUrl: https://www.metaplex.com\nAttributes: [\"trait_type\": \"category\", \"value\": \"image\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"]\nProperties: [\"files\": [\"uri\": \"https://www.metaplex.com/images/logo.png\", \"type\": \"image/png\", \"cdn\": \"https://www.metaplex.com/images/logo.png\"], \"category\": \"image\"]\n\nGenerate some random NFT Data"
                 },
             ]
         });
