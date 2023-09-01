@@ -1,0 +1,10 @@
+{
+    "name": "ai-nft-generator",
+    "scripts": {
+      "build:cargo": "make",
+      "fix": "cargo fmt"
+    },
+    "dependencies": {
+      "solana-basic-oracle": "latest"
+    }
+  }

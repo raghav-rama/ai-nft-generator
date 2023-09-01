@@ -1,5 +1,5 @@
 // eslint-disable-next-line node/no-unpublished-import
-import type { AiNftGenerator } from "../target/types/ai-nft-generator";
+import type { AiNftGenerator } from "../target/types/ai_nft_generator";
 
 import type { Program } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor";
@@ -20,7 +20,7 @@ const unixTimestamp = () => Math.floor(Date.now() / 1000);
 // vv1gTnfuUiroqgJHS4xsRASsRQqqixCv1su85VWvcP9
 
 const MRENCLAVE = parseRawMrEnclave(
-    // put your mrEnclave value
+    "0xec4e9cb9c6e78c0a008e35ea92e3a9478d9bfd14e15bbf88c93935f0951c1d98"
     );
 const emptyEnclave: number[] = new Array(32).fill(0);
 

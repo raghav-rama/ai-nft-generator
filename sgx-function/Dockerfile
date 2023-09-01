@@ -2,12 +2,14 @@
 
 FROM switchboardlabs/sgx-function AS builder
 
-ARG CARGO_NAME=switchboard-function
+ARG CARGO_NAME=openai-request
 ENV CARGO_NAME=${CARGO_NAME}
 
 WORKDIR /home/root/switchboard-function
 COPY ./Cargo.lock ./Cargo.toml ./
-COPY ./src ./src
+COPY ./programs/ai-nft-generator/src ./programs/ai-nft-generator/src
+COPY ./programs/ai-nft-generator/Cargo.toml ./programs/ai-nft-generator/Cargo.toml
+COPY ./programs/ai-nft-generator/Xargo.toml ./programs/ai-nft-generator/Xargo.toml
 
 WORKDIR /home/root/switchboard-function/sgx-function
 COPY ./sgx-function/Cargo.lock ./sgx-function/Cargo.toml ./
@@ -17,7 +19,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry,id=${TARGETPLATFORM} \
     --mount=type=cache,target=target,id=${TARGETPLATFORM} \
     cargo build --release && \
     cargo strip && \
-    mv target/release/${CARGO_NAME} /sgx/app
+    mv ../target/release/${CARGO_NAME} /sgx/app
 
 FROM switchboardlabs/sgx-function
 

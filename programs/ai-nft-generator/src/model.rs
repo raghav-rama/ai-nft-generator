@@ -61,5 +61,5 @@ pub struct MyOracleState {
 }
 
 impl MyProgramState {
-    let LEN = 8;
+    const LEN: usize = 8;
 }
