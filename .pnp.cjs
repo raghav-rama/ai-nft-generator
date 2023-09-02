@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@coral-xyz/anchor", "npm:0.28.0"],\
+            ["@solana/web3.js", "npm:1.78.4"],\
             ["@switchboard-xyz/common", "npm:2.3.4"],\
             ["@switchboard-xyz/solana.js", "npm:2.5.6"],\
             ["@types/bn.js", "npm:5.1.1"],\
@@ -559,6 +560,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["ai-nft-generator", "workspace:."],\
             ["@coral-xyz/anchor", "npm:0.28.0"],\
+            ["@solana/web3.js", "npm:1.78.4"],\
             ["@switchboard-xyz/common", "npm:2.3.4"],\
             ["@switchboard-xyz/solana.js", "npm:2.5.6"],\
             ["@types/bn.js", "npm:5.1.1"],\
