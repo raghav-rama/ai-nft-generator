@@ -1,8 +1,6 @@
 use crate::*;
-use std::env;
 use std::error::Error;
 
-use futures::TryFutureExt;
 use keys::get_openai_api_key;
 pub use switchboard_utils::reqwest::{
     get,
@@ -10,9 +8,23 @@ pub use switchboard_utils::reqwest::{
     Client,
 };
 
+use async_openai::{
+    types::{ChatCompletionRequestMessageArgs, CreateChatCompletionRequestArgs, Role},
+    Client as OpenAiClient,
+};
+
 use ai_nft_generator::model::NftMetadataBorsh;
 use serde::Deserialize;
 use serde_json::json;
+
+pub fn ix_discriminator(name: &str) -> [u8; 8] {
+    let preimage = format!("global:{}", name);
+    let mut sighash = [0u8; 8];
+    sighash.copy_from_slice(
+        &anchor_lang::solana_program::hash::hash(preimage.as_bytes()).to_bytes()[..8],
+    );
+    sighash
+}
 
 #[allow(non_snake_case)]
 #[derive(Default, Debug, Deserialize, Clone)]
@@ -21,10 +33,10 @@ pub struct MetaplexNftStandard {
     pub symbol: String,
     pub description: String,
     pub image: String,
-    pub animationUrl: String,
-    pub externalUrl: String,
-    pub attributes: Vec<Attribute>,
-    pub properties: Properties,
+    pub animationUrl: Option<String>,
+    pub externalUrl: Option<String>,
+    pub attributes: Option<Vec<Attribute>>,
+    pub properties: Option<Properties>,
 }
 
 #[derive(Default, Debug, Deserialize, Clone)]
@@ -76,9 +88,9 @@ impl MetaplexNftStandard {
             .send()
             .await
             .unwrap();
-            // .json::<MetaplexNftStandard>()
-            // .await
-            // .unwrap();
+        // .json::<MetaplexNftStandard>()
+        // .await
+        // .unwrap();
         println!("Response: {:?}", res);
 
         let response = get(url)
@@ -97,5 +109,48 @@ impl MetaplexNftStandard {
             attributes: response.attributes,
             properties: response.properties,
         })
+    }
+    pub async fn chat_completions() -> std::result::Result<MetaplexNftStandard, Box<dyn Error>> {
+        let client = OpenAiClient::new();
+        let request = CreateChatCompletionRequestArgs::default()
+            .max_tokens(512u16)
+            .model("gpt-3.5-turbo")
+            .messages([
+                ChatCompletionRequestMessageArgs::default()
+                    .role(Role::System)
+                    .content("You are an NFT nerd")
+                    .build()
+                    .unwrap(),
+                ChatCompletionRequestMessageArgs::default()
+                    .role(Role::User)
+                    .content("This is the Metaplex NFT Standard. Generate some random NFT Data, in this format as a json only(key, value pair)\n\n
+                    name: nft name\n
+                    symbol: initials\n
+                    description: any random description\n
+                    image: https://www.metaplex.com/images/logo.png\n
+                    animationUrl: https://www.metaplex.com/images/logo.png\n
+                    externalUrl: https://www.metaplex.com\n
+                    attributes: [\"trait_type\": \"category\", \"value\": \"image\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"]\n
+                    properties: \"files\": [\"uri\": \"https://www.metaplex.com/images/logo.png\", \"type_field\": \"image/png\", \"cdn\": \"https://www.metaplex.com/images/logo.png\"], \"category\": \"image\"\n")
+                    .build()
+                    .unwrap(),
+            ])
+            .build()?;
+        let mut response = client.chat().create(request).await?;
+        let metadata = response.choices[0]
+            .message
+            .content
+            .as_mut()
+            .unwrap()
+            .replace("\n", "");
+        Ok(
+            match serde_json::from_str::<MetaplexNftStandard>(metadata.as_str()) {
+                Ok(result) => result,
+                Err(e) => {
+                    println!("metadata: {:?}", metadata);
+                    panic!("Error: {:?}", e)
+                }
+            },
+        )
     }
 }
