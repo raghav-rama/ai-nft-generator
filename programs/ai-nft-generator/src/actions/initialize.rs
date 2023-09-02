@@ -5,7 +5,7 @@ use crate::*;
 pub struct Initialize<'info> {
     #[account(
         init,
-        space = 8,
+        space = 8 + std::mem::size_of::<MyProgramState>(),
         payer = payer,
         seeds = [PROGRAM_SEED],
         bump
@@ -13,7 +13,7 @@ pub struct Initialize<'info> {
     pub program: AccountLoader<'info, MyProgramState>,
     #[account(
         init,
-        space = 8,
+        space = 8 + std::mem::size_of::<MyOracleState>(),
         payer = payer,
         seeds = [ORACLE_SEED],
         bump
@@ -26,7 +26,18 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
-pub struct InitializeParams {
-    pub authority: Pubkey,
-    pub function: Pubkey,
+pub struct InitializeParams {}
+
+impl Initialize<'_> {
+    pub fn validate(&self, _ctx: &Context<Initialize>, _params: &InitializeParams) -> Result<()> {
+        Ok(())
+    }
+    pub fn actuate(ctx: &Context<Self>, _params: &InitializeParams) -> Result<()> {
+        let program = &mut ctx.accounts.program.load_init()?;
+        program.bump = *ctx.bumps.get("program").unwrap();
+        program.authority = ctx.accounts.authority.key();
+        let oracle = &mut ctx.accounts.oracle.load_init()?;
+        oracle.bump = *ctx.bumps.get("oracle").unwrap();
+        Ok(())
+    }
 }
