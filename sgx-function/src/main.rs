@@ -24,22 +24,22 @@ use std::env;
 #[tokio::main(worker_threads = 12)]
 async fn main() {
     set_openai_api_key().unwrap();
-    env::set_var(
-        "FUNCTION_KEY",
-        "BvvrSwT1KFwXf8v4E7ZA1L7jdFTYzt1WcqBV8FfDtTJx",
-    );
-    env::set_var("PAYER", "5krot8UnMEqoDkAc72e7pqaEaF5hxGmbDNowMmPiCDmb");
+    // env::set_var(
+    //     "FUNCTION_KEY",
+    //     "BvvrSwT1KFwXf8v4E7ZA1L7jdFTYzt1WcqBV8FfDtTJx",
+    // );
+    // env::set_var("PAYER", "5krot8UnMEqoDkAc72e7pqaEaF5hxGmbDNowMmPiCDmb");
     // env::set_var("FUNCTION_DATA", "x");
-    env::set_var(
-        "FUNCTION_REQUEST_KEY",
-        "BsNUF2vKEXqwFf49DyXDNd75UrYL69gGKxUYGq3uuddf",
-    );
+    // env::set_var(
+    //     "FUNCTION_REQUEST_KEY",
+    //     "BsNUF2vKEXqwFf49DyXDNd75UrYL69gGKxUYGq3uuddf",
+    // );
     // env::set_var("FUNCTION_REQUEST_DATA", "x");
-    env::set_var("VERIFIER", "5krot8UnMEqoDkAc72e7pqaEaF5hxGmbDNowMmPiCDmb");
-    env::set_var(
-        "REWARD_RECEIVER",
-        "5krot8UnMEqoDkAc72e7pqaEaF5hxGmbDNowMmPiCDmb",
-    );
+    // env::set_var("VERIFIER", "5krot8UnMEqoDkAc72e7pqaEaF5hxGmbDNowMmPiCDmb");
+    // env::set_var(
+    //     "REWARD_RECEIVER",
+    //     "5krot8UnMEqoDkAc72e7pqaEaF5hxGmbDNowMmPiCDmb",
+    // );
     // env::set_var(
     //     "VERIFIER_ENCLAVE_SIGNER",
     //     "5krot8UnMEqoDkAc72e7pqaEaF5hxGmbDNowMmPiCDmb",
@@ -56,15 +56,17 @@ async fn main() {
     )
     .unwrap();
 
+    let mut params = MetaplexNftStandard::default();
     let request_data = *runner.load_request_data().await.unwrap();
     let container_params = request_data
         .container_params
         .iter()
         .map(|char| *char as char)
         .collect::<String>();
-    match generate_image(String::from("Cats in space")).await {
+    match generate_image(String::from(container_params.clone())).await {
         Ok(url) => match MetaplexNftStandard::chat_completions(container_params, url).await {
-            Ok(_) => {
+            Ok(nft_metadata) => {
+                params = nft_metadata;
                 println!("Deserization Succeeded!");
             }
             Err(e) => {
@@ -75,7 +77,7 @@ async fn main() {
             println!("error: \n{:?}", e);
         }
     }
-    let ixns = vec![];
+    let ixns = params.generate_ixns(&runner);
     runner.emit(ixns).await.unwrap();
     // todo!("PARSE PARAMS FROM PARAMS ACCOUNT");
     // let nft = MetaplexNftStandard::get_data().await.unwrap();

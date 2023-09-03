@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.28.0",
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/web3.js": "^1.78.4",
     "@switchboard-xyz/common": "^2.3.4",
     "@switchboard-xyz/solana.js": "^2.5.6"

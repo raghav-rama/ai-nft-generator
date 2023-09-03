@@ -1,7 +1,6 @@
 use crate::*;
-use std::error::Error;
-
 use keys::get_openai_api_key;
+use std::error::Error;
 pub use switchboard_utils::reqwest::{
     get,
     header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE},
@@ -13,7 +12,7 @@ use async_openai::{
     Client as OpenAiClient,
 };
 
-use ai_nft_generator::model::NftMetadataBorsh;
+use ai_nft_generator::{model::NftMetadataBorsh, GenerateNftParams, NftMetadata};
 use serde::Deserialize;
 use serde_json::json;
 
@@ -59,6 +58,43 @@ pub struct File {
     pub cdn: Option<String>,
 }
 
+impl Into<NftMetadataBorsh> for MetaplexNftStandard {
+    fn into(self) -> NftMetadataBorsh {
+        NftMetadataBorsh {
+            name: self.name.as_bytes().try_into().unwrap(),
+            symbol: self.symbol.as_bytes().try_into().unwrap(),
+            description: self.description.as_bytes().try_into().unwrap(),
+            image: self.image.as_bytes().try_into().unwrap(),
+            animationUrl: match self.animationUrl {
+                Some(url) => Some(url.as_bytes().try_into().unwrap()),
+                None => None,
+            },
+            externalUrl: match self.externalUrl {
+                Some(url) => Some(url.as_bytes().try_into().unwrap()),
+                None => None,
+            },
+        }
+    }
+}
+
+impl Into<NftMetadata> for MetaplexNftStandard {
+    fn into(self) -> NftMetadata {
+        NftMetadata {
+            name: self.name.as_bytes().try_into().unwrap(),
+            symbol: self.symbol.as_bytes().try_into().unwrap(),
+            description: self.description.as_bytes().try_into().unwrap(),
+            image: self.image.as_bytes().try_into().unwrap(),
+            animationUrl: match self.animationUrl {
+                Some(url) => Some(url.as_bytes().try_into().unwrap()),
+                None => None,
+            },
+            externalUrl: match self.externalUrl {
+                Some(url) => Some(url.as_bytes().try_into().unwrap()),
+                None => None,
+            },
+        }
+    }
+}
 // "content": "This is a Metaplex NFT standard. It contains the following attributes:\n\nName: Metaplex NFT Standard\nSymbol: MPT\nDescription: This is a standard for NFTs on the Metaplex platform.\nImage: https://www.metaplex.com/images/logo.png\nAnimationUrl: https://www.metaplex.com/images/logo.png\nExternalUrl: https://www.metaplex.com\nAttributes: [\"trait_type\": \"category\", \"value\": \"image\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"]\nProperties: [\"files\": [\"uri\": \"https://www.metaplex.com/images/logo.png\", \"type\": \"image/png\", \"cdn\": \"https://www.metaplex.com/images/logo.png\"], \"category\": \"image\"]\n\nGenerate some random NFT Data"
 impl MetaplexNftStandard {
     pub async fn get_data() -> std::result::Result<MetaplexNftStandard, SwitchboardClientError> {
@@ -114,7 +150,7 @@ impl MetaplexNftStandard {
     pub async fn chat_completions(
         prompt: String,
         nft_url: String,
-    ) -> std::result::Result<MetaplexNftStandard, Box<dyn Error>> {
+    ) -> std::result::Result<Self, Box<dyn Error>> {
         let client = OpenAiClient::new();
         let request = CreateChatCompletionRequestArgs::default()
             .max_tokens(512u16)
@@ -156,5 +192,38 @@ impl MetaplexNftStandard {
                 }
             },
         )
+    }
+    pub fn generate_ixns(self, runner: &FunctionRunner) -> Vec<Instruction> {
+        let generate_nft_params = GenerateNftParams { nft: self.into() };
+        let (program_state_pubkey, _) =
+            Pubkey::find_program_address(&[b"ai-nft-generator-oracle"], &ai_nft_generator::ID);
+        let (oracle_pubkey, _) =
+            Pubkey::find_program_address(&[b"ai-nft-generator-oracle"], &ai_nft_generator::ID);
+        let ixn = Instruction {
+            program_id: ai_nft_generator::ID,
+            accounts: vec![
+                AccountMeta {
+                    pubkey: oracle_pubkey,
+                    is_signer: false,
+                    is_writable: true,
+                },
+                AccountMeta {
+                    pubkey: runner.function,
+                    is_signer: false,
+                    is_writable: false,
+                },
+                AccountMeta {
+                    pubkey: runner.signer,
+                    is_signer: true,
+                    is_writable: false,
+                },
+            ],
+            data: [
+                ix_discriminator("mint_ai_nft").to_vec(),
+                generate_nft_params.try_to_vec().unwrap(),
+            ]
+            .concat(),
+        };
+        vec![ixn]
     }
 }

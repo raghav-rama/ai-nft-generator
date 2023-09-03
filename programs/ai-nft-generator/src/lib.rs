@@ -6,6 +6,9 @@ pub use model::*;
 pub mod actions;
 pub use actions::*;
 
+pub mod error;
+pub use error::*;
+
 declare_id!("9zFjUs3LhY39t7HbJWMBFt6VrBMktVzbvBXAjFo7V8yS");
 
 pub const PROGRAM_SEED: &[u8] = b"ai-nft-generator";
@@ -24,11 +27,11 @@ pub mod ai_nft_generator {
         Initialize::actuate(&ctx, &params)
     }
 
-    // #[access_control(ctx.accounts.validate(&ctx, &params))]
-    // pub fn refresh_oracles(
-    //     ctx: Context<NftMetadata>,
-    //     params: NftMetadataBorsh,
-    // ) -> anchor_lang::Result<()> {
-    //     NftMetadata::actuate(&ctx, &params)
-    // }
+    #[access_control(ctx.accounts.validate(&ctx, &params))]
+    pub fn mint_ai_nft(
+        ctx: Context<GenerateNft>,
+        params: GenerateNftParams,
+    ) -> anchor_lang::Result<()> {
+        GenerateNft::actuate(ctx, params)
+    }
 }

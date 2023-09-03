@@ -11,17 +11,21 @@ import {
   FunctionRequestAccount,
   SendTransactionObjectOptions,
   SwitchboardProgram,
+  FunctionAccountInitParams,
   FunctionAccount,
   attestationTypes,
   AttestationQueueAccount,
   AttestationProgramStateAccount,
+  BootstrappedAttestationQueue,
+  SwitchboardWallet,
 } from "@switchboard-xyz/solana.js";
 import { parseRawMrEnclave } from "@switchboard-xyz/common";
+import { DataV2 } from "@metaplex-foundation/mpl-token-metadata";
 
 describe("ai-nft-generator", () => {
   const unixTimestamp = () => Math.floor(Date.now() / 1000);
   const MRENCLAVE = parseRawMrEnclave(
-    "0x363b16f752945498c0fafef9f14915141ffdd35729eb39d8dd330161552703dc"
+    "0x665aff2cfbdee0fcb1031ee788338da07af81a56172f7ca5042a47c985e8b272"
   );
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
@@ -31,10 +35,7 @@ describe("ai-nft-generator", () => {
   const payer = anchor.web3.Keypair.fromSecretKey(new Uint8Array(wallet));
 
   const commitment: Commitment = "confirmed";
-  const connection = new Connection(
-    "https://api.devnet.solana.com",
-    commitment
-  );
+  const connection = new Connection("http://localhost:8899", commitment);
 
   interface InitializeParams {}
   let initializeParams: InitializeParams = {};
@@ -51,17 +52,47 @@ describe("ai-nft-generator", () => {
   before(async () => {
     try {
       const switchboardProgram = await SwitchboardProgram.load(
-        "devnet",
+        "localnet",
         connection,
         payer
       );
-      const [functionAccount, functionAccountData] = await FunctionAccount.load(
-        switchboardProgram,
-        "BvvrSwT1KFwXf8v4E7ZA1L7jdFTYzt1WcqBV8FfDtTJx"
+      await AttestationProgramStateAccount.getOrCreate(switchboardProgram);
+      const switchboard: BootstrappedAttestationQueue =
+        await AttestationQueueAccount.bootstrapNewQueue(switchboardProgram);
+      const [wallet] = await SwitchboardWallet.create(
+        switchboard.program,
+        switchboard.attestationQueue.publicKey,
+        payer.publicKey,
+        "MySharedWallet",
+        16
       );
-      /*let functionTriggerParams: FunctionTriggerParams = {
+      const functionAccountInitParams: FunctionAccountInitParams = {
+        name: "test function",
+        metadata: "test metadata",
+        container: "860x9/openai-request",
+        version: "latest",
+        containerRegistry: "dockerhub",
+        mrEnclave: MRENCLAVE,
+        authority: payer.publicKey,
+        attestationQueue: switchboard.attestationQueue.account,
+      };
+      let [functionAccount, txId] =
+        await switchboard.attestationQueue.account.createFunction(
+          functionAccountInitParams,
+          wallet
+        );
+      console.log("functionAccount", functionAccount.publicKey.toBase58());
+      console.log("txId", txId);
+      let functionTriggerParams: FunctionTriggerParams = {
         authority: payer,
       };
+      txId = await functionAccount.trigger(functionTriggerParams);
+      console.log("txId", txId);
+      // const [functionAccount, functionAccountData] = await FunctionAccount.load(
+      //   switchboardProgram,
+      //   "BvvrSwT1KFwXf8v4E7ZA1L7jdFTYzt1WcqBV8FfDtTJx"
+      // );
+      /*
       txId = await functionAccount.trigger(functionTriggerParams);
       console.log("txId", txId);*/
       /*await AttestationProgramStateAccount.getOrCreate(switchboardProgram);
@@ -153,6 +184,13 @@ describe("ai-nft-generator", () => {
       console.log("Your transaction signature", tx);
     } catch (error) {
       console.error(error);
+    }
+  });
+  it("fetches nft metadata", async () => {
+    try {
+      // const
+    } catch (error) {
+      console.log(error);
     }
   });
 });

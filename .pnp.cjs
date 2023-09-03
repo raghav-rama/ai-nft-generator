@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@coral-xyz/anchor", "npm:0.28.0"],\
+            ["@metaplex-foundation/mpl-token-metadata", "npm:2.13.0"],\
             ["@solana/web3.js", "npm:1.78.4"],\
             ["@switchboard-xyz/common", "npm:2.3.4"],\
             ["@switchboard-xyz/solana.js", "npm:2.5.6"],\
@@ -137,6 +138,56 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
               "wrap-ansi",\
               "npm:7.0.0"\
             ]]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@metaplex-foundation/beet", [\
+        ["npm:0.7.1", {\
+          "packageLocation": "./.yarn/cache/@metaplex-foundation-beet-npm-0.7.1-ddb03f9195-f8a330073a.zip/node_modules/@metaplex-foundation/beet/",\
+          "packageDependencies": [\
+            ["@metaplex-foundation/beet", "npm:0.7.1"],\
+            ["ansicolors", "npm:0.3.2"],\
+            ["bn.js", "npm:5.2.1"],\
+            ["debug", "virtual:428f325a939c2653ad822eb3d75efb02ac311523dd0d4f9645afc39ea00bd86eceac35a9d59c9b6977d76b670a4ef0ae057ea572338a44729aa592711a8c05a3#npm:4.3.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@metaplex-foundation/beet-solana", [\
+        ["npm:0.4.0", {\
+          "packageLocation": "./.yarn/cache/@metaplex-foundation-beet-solana-npm-0.4.0-14cd1c5b4e-ee746c2d15.zip/node_modules/@metaplex-foundation/beet-solana/",\
+          "packageDependencies": [\
+            ["@metaplex-foundation/beet-solana", "npm:0.4.0"],\
+            ["@metaplex-foundation/beet", "npm:0.7.1"],\
+            ["@solana/web3.js", "npm:1.78.4"],\
+            ["bs58", "npm:5.0.0"],\
+            ["debug", "virtual:428f325a939c2653ad822eb3d75efb02ac311523dd0d4f9645afc39ea00bd86eceac35a9d59c9b6977d76b670a4ef0ae057ea572338a44729aa592711a8c05a3#npm:4.3.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@metaplex-foundation/cusper", [\
+        ["npm:0.0.2", {\
+          "packageLocation": "./.yarn/cache/@metaplex-foundation-cusper-npm-0.0.2-26c737d3f0-d157953baf.zip/node_modules/@metaplex-foundation/cusper/",\
+          "packageDependencies": [\
+            ["@metaplex-foundation/cusper", "npm:0.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@metaplex-foundation/mpl-token-metadata", [\
+        ["npm:2.13.0", {\
+          "packageLocation": "./.yarn/cache/@metaplex-foundation-mpl-token-metadata-npm-2.13.0-3d7f502806-89f82980f4.zip/node_modules/@metaplex-foundation/mpl-token-metadata/",\
+          "packageDependencies": [\
+            ["@metaplex-foundation/mpl-token-metadata", "npm:2.13.0"],\
+            ["@metaplex-foundation/beet", "npm:0.7.1"],\
+            ["@metaplex-foundation/beet-solana", "npm:0.4.0"],\
+            ["@metaplex-foundation/cusper", "npm:0.0.2"],\
+            ["@solana/spl-token", "virtual:3d7f502806aa1054eeae88ea28bb78400373aca0d5059e36111d0a6e2cf7b7b98a5dac53eb875748c7cbbc6ede0f612920ffd350eb5c6d9ec08f382c4bd77a66#npm:0.3.8"],\
+            ["@solana/web3.js", "npm:1.78.4"],\
+            ["bn.js", "npm:5.2.1"],\
+            ["debug", "virtual:428f325a939c2653ad822eb3d75efb02ac311523dd0d4f9645afc39ea00bd86eceac35a9d59c9b6977d76b670a4ef0ae057ea572338a44729aa592711a8c05a3#npm:4.3.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -309,10 +360,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:12c9c3c38e4e0dc3cdec22938816a3ce0fd5729c7d226a4ce6f5a9ed8dd5ffa970a7685f429ab36640bcfbce7dd47a5a926ea50f1e136513a4d29e16e1a6dd99#npm:0.3.8", {\
-          "packageLocation": "./.yarn/__virtual__/@solana-spl-token-virtual-dc8acb6c35/0/cache/@solana-spl-token-npm-0.3.8-b18da3a966-01f4f87112.zip/node_modules/@solana/spl-token/",\
+        ["virtual:3d7f502806aa1054eeae88ea28bb78400373aca0d5059e36111d0a6e2cf7b7b98a5dac53eb875748c7cbbc6ede0f612920ffd350eb5c6d9ec08f382c4bd77a66#npm:0.3.8", {\
+          "packageLocation": "./.yarn/__virtual__/@solana-spl-token-virtual-5400869e45/0/cache/@solana-spl-token-npm-0.3.8-b18da3a966-01f4f87112.zip/node_modules/@solana/spl-token/",\
           "packageDependencies": [\
-            ["@solana/spl-token", "virtual:12c9c3c38e4e0dc3cdec22938816a3ce0fd5729c7d226a4ce6f5a9ed8dd5ffa970a7685f429ab36640bcfbce7dd47a5a926ea50f1e136513a4d29e16e1a6dd99#npm:0.3.8"],\
+            ["@solana/spl-token", "virtual:3d7f502806aa1054eeae88ea28bb78400373aca0d5059e36111d0a6e2cf7b7b98a5dac53eb875748c7cbbc6ede0f612920ffd350eb5c6d9ec08f382c4bd77a66#npm:0.3.8"],\
             ["@solana/buffer-layout", "npm:4.0.1"],\
             ["@solana/buffer-layout-utils", "npm:0.2.0"],\
             ["@solana/web3.js", "npm:1.78.4"],\
@@ -395,7 +446,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@switchboard-xyz/solana.js", "npm:2.5.6"],\
             ["@coral-xyz/anchor", "npm:0.28.0"],\
             ["@coral-xyz/borsh", "virtual:12c9c3c38e4e0dc3cdec22938816a3ce0fd5729c7d226a4ce6f5a9ed8dd5ffa970a7685f429ab36640bcfbce7dd47a5a926ea50f1e136513a4d29e16e1a6dd99#npm:0.28.0"],\
-            ["@solana/spl-token", "virtual:12c9c3c38e4e0dc3cdec22938816a3ce0fd5729c7d226a4ce6f5a9ed8dd5ffa970a7685f429ab36640bcfbce7dd47a5a926ea50f1e136513a4d29e16e1a6dd99#npm:0.3.8"],\
+            ["@solana/spl-token", "virtual:3d7f502806aa1054eeae88ea28bb78400373aca0d5059e36111d0a6e2cf7b7b98a5dac53eb875748c7cbbc6ede0f612920ffd350eb5c6d9ec08f382c4bd77a66#npm:0.3.8"],\
             ["@solana/web3.js", "npm:1.78.4"],\
             ["@switchboard-xyz/common", "npm:2.3.4"],\
             ["cron-validator", "npm:1.3.1"],\
@@ -560,6 +611,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["ai-nft-generator", "workspace:."],\
             ["@coral-xyz/anchor", "npm:0.28.0"],\
+            ["@metaplex-foundation/mpl-token-metadata", "npm:2.13.0"],\
             ["@solana/web3.js", "npm:1.78.4"],\
             ["@switchboard-xyz/common", "npm:2.3.4"],\
             ["@switchboard-xyz/solana.js", "npm:2.5.6"],\
@@ -613,6 +665,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ansi-styles-npm-6.2.1-d43647018c-ef940f2f0c.zip/node_modules/ansi-styles/",\
           "packageDependencies": [\
             ["ansi-styles", "npm:6.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ansicolors", [\
+        ["npm:0.3.2", {\
+          "packageLocation": "./.yarn/cache/ansicolors-npm-0.3.2-cc35882814-e84fae7ebc.zip/node_modules/ansicolors/",\
+          "packageDependencies": [\
+            ["ansicolors", "npm:0.3.2"]\
           ],\
           "linkType": "HARD"\
         }]\
