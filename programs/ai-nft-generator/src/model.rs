@@ -40,15 +40,15 @@ impl From<NftMetadataBorsh> for NftMetadata {
     fn from(value: NftMetadataBorsh) -> Self {
         Self {
             oracle_timestamp: value.oracle_timestamp,
-            key: value.key,
-            update_authority: value.update_authority,
-            mint: value.mint,
-            name: value.name,
-            symbol: value.symbol,
-            uri: value.uri,
-            seller_fee_basis_points: value.seller_fee_basis_points,
-            primary_sale_happened: value.primary_sale_happened,
-            is_mutable: value.is_mutable,
+            key: value.key.clone(),
+            update_authority: value.update_authority.clone(),
+            mint: value.mint.clone(),
+            name: value.name.clone(),
+            symbol: value.symbol.clone(),
+            uri: value.uri.clone(),
+            seller_fee_basis_points: value.seller_fee_basis_points.clone(),
+            primary_sale_happened: value.primary_sale_happened.clone(),
+            is_mutable: value.is_mutable.clone(),
         }
     }
 }
@@ -60,6 +60,9 @@ pub struct MyOracleState {
     pub nft: NftMetadata,
 }
 
-impl MyProgramState {
-    const LEN: usize = 8;
+impl MyOracleState {
+    pub fn update_nft_metadata(&mut self, nft: NftMetadata) -> Result<()> {
+        self.nft = nft;
+        Ok(())
+    }
 }

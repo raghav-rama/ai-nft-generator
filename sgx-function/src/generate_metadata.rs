@@ -54,7 +54,8 @@ pub struct Properties {
 #[derive(Default, Debug, Deserialize, Clone)]
 pub struct File {
     pub uri: String,
-    pub type_field: String,
+    #[serde(rename = "type")]
+    pub file_type: String,
     pub cdn: Option<String>,
 }
 
@@ -110,7 +111,10 @@ impl MetaplexNftStandard {
             properties: response.properties,
         })
     }
-    pub async fn chat_completions() -> std::result::Result<MetaplexNftStandard, Box<dyn Error>> {
+    pub async fn chat_completions(
+        prompt: String,
+        nft_url: String,
+    ) -> std::result::Result<MetaplexNftStandard, Box<dyn Error>> {
         let client = OpenAiClient::new();
         let request = CreateChatCompletionRequestArgs::default()
             .max_tokens(512u16)
@@ -118,20 +122,20 @@ impl MetaplexNftStandard {
             .messages([
                 ChatCompletionRequestMessageArgs::default()
                     .role(Role::System)
-                    .content("You are an NFT nerd")
+                    .content(format!("This is the Metaplex NFT Standard. Generate some random NFT Data, in this format as a json only(key, value pair)\n\n
+                    name: nft name\n
+                    symbol: initials\n
+                    description: any random description\n
+                    image: {}\n
+                    animationUrl: https://www.metaplex.com/images/logo.png\n
+                    externalUrl: https://www.metaplex.com\n
+                    attributes: [\"trait_type\": \"category\", \"value\": \"image\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"]\n
+                    properties: \"files\": [\"uri\": \"https://www.metaplex.com/images/logo.png\", \"type_field\": \"image/png\", \"cdn\": \"https://www.metaplex.com/images/logo.png\"], \"category\": \"image\"\n", nft_url))
                     .build()
                     .unwrap(),
                 ChatCompletionRequestMessageArgs::default()
                     .role(Role::User)
-                    .content("This is the Metaplex NFT Standard. Generate some random NFT Data, in this format as a json only(key, value pair)\n\n
-                    name: nft name\n
-                    symbol: initials\n
-                    description: any random description\n
-                    image: https://www.metaplex.com/images/logo.png\n
-                    animationUrl: https://www.metaplex.com/images/logo.png\n
-                    externalUrl: https://www.metaplex.com\n
-                    attributes: [\"trait_type\": \"category\", \"value\": \"image\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"], [\"trait_type\": \"files\", \"value\": \"https://www.metaplex.com/images/logo.png\"]\n
-                    properties: \"files\": [\"uri\": \"https://www.metaplex.com/images/logo.png\", \"type_field\": \"image/png\", \"cdn\": \"https://www.metaplex.com/images/logo.png\"], \"category\": \"image\"\n")
+                    .content(prompt)
                     .build()
                     .unwrap(),
             ])
