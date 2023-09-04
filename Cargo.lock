@@ -100,6 +100,7 @@ name = "ai-nft-generator"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
+ "anchor-spl",
  "bytemuck",
  "switchboard-solana",
 ]

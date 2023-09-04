@@ -19,4 +19,5 @@ default = []
 anchor-lang = "0.28.0"
 switchboard-solana = "0.28.0"
 bytemuck = "^1"
+anchor-spl = "0.28.0"
 # openssl = "0.10.56"
