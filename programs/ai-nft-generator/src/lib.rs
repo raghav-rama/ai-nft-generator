@@ -34,4 +34,28 @@ pub mod ai_nft_generator {
     ) -> anchor_lang::Result<()> {
         GenerateNft::actuate(ctx, params)
     }
+
+    #[access_control(ctx.accounts.validate(&ctx, &params))]
+    pub fn set_function(
+        ctx: Context<SetFunction>,
+        params: SetFunctionParams,
+    ) -> anchor_lang::Result<()> {
+        SetFunction::actuate(ctx, params)
+    }
+
+    #[access_control(ctx.accounts.validate(&ctx, &params))]
+    pub fn trigger_function(
+        ctx: Context<TriggerFunction>,
+        params: TriggerFunctionParams,
+    ) -> anchor_lang::Result<()> {
+        TriggerFunction::actuate(&ctx, &params)
+    }
+
+    #[access_control(ctx.accounts.validate(&ctx, &params))]
+    pub fn set_user_prompt(
+        ctx: Context<UserPrompt>,
+        params: UserPromptParams,
+    ) -> anchor_lang::Result<()> {
+        UserPrompt::actuate(ctx, params)
+    }
 }
