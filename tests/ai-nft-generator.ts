@@ -1,6 +1,13 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { PublicKey, Connection, Commitment } from "@solana/web3.js";
+import {
+  PublicKey,
+  Connection,
+  Commitment,
+  Transaction,
+  sendAndConfirmTransaction,
+  sendAndConfirmRawTransaction,
+} from "@solana/web3.js";
 import { AiNftGenerator } from "../target/types/ai_nft_generator";
 import wallet from "../wallet.json";
 import {
@@ -257,57 +264,68 @@ describe("ai-nft-generator", () => {
     }
   });
   it("generates the nft", async () => {
-    const enclaveSigner = anchor.web3.Keypair.generate();
-    console.log(`enclaveSigner`, enclaveSigner.publicKey.toBase58());
-    const rewardAddress =
-      await switchboardG.program.mint.getOrCreateAssociatedUser(
-        payer.publicKey
-      );
-    functionVerifyIxn = attestationTypes.functionVerify(
-      switchboardG.program,
-      {
-        params: {
-          observedTime: new anchor.BN(unixTimestamp()),
-          nextAllowedTimestamp: new anchor.BN(unixTimestamp() + 100),
-          isFailure: false,
-          mrEnclave: Array.from(MRENCLAVE),
-        },
-      },
-      {
-        function: functionAccountG.publicKey,
-        functionEnclaveSigner: enclaveSigner.publicKey,
-        verifier: switchboardG.verifier.publicKey,
-        verifierSigner: switchboardG.verifier.signer.publicKey,
-        attestationQueue: switchboardG.attestationQueue.publicKey,
-        escrowWallet: functionAccountData.escrowWallet,
-        escrowTokenWallet: functionAccountData.escrowTokenWallet,
-        receiver: rewardAddress,
-        verifierPermission: switchboardG.verifier.permissionAccount.publicKey,
-        tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-      }
-    );
     try {
-      const tx = await program.methods
-        .mintAiNft({
-          nft: {
-            name: [1],
-            symbol: [1],
-            description: [1],
-            image: [1],
-            animationUrl: [1],
-            externalUrl: [1],
+      const enclaveSigner = anchor.web3.Keypair.generate();
+      console.log(`enclaveSigner`, enclaveSigner.publicKey.toBase58());
+      const rewardAddress =
+        await switchboardG.program.mint.getOrCreateAssociatedUser(
+          payer.publicKey
+        );
+      functionVerifyIxn = attestationTypes.functionVerify(
+        switchboardG.program,
+        {
+          params: {
+            observedTime: new anchor.BN(unixTimestamp()),
+            nextAllowedTimestamp: new anchor.BN(unixTimestamp() + 100),
+            isFailure: false,
+            mrEnclave: Array.from(MRENCLAVE),
           },
-        })
-        .accounts({
+        },
+        {
           function: functionAccountG.publicKey,
-          oracle: oraclePda,
-          enclaveSigner: enclaveSigner.publicKey,
-          request: requestAccountKeypairG.publicKey,
-        })
-        .preInstructions([functionVerifyIxn])
-        .signers([switchboardG.verifier.signer, enclaveSigner])
-        .rpc();
-      console.log("Your transaction signature", tx);
+          functionEnclaveSigner: enclaveSigner.publicKey,
+          verifier: switchboardG.verifier.publicKey,
+          verifierSigner: switchboardG.verifier.signer.publicKey,
+          attestationQueue: switchboardG.attestationQueue.publicKey,
+          escrowWallet: functionAccountData.escrowWallet,
+          escrowTokenWallet: functionAccountData.escrowTokenWallet,
+          receiver: rewardAddress,
+          verifierPermission: switchboardG.verifier.permissionAccount.publicKey,
+          tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+        }
+      );
+      const preTransaction = new Transaction().add(functionVerifyIxn);
+      preTransaction.recentBlockhash = (
+        await connection.getLatestBlockhash(commitment)
+      ).blockhash;
+      const txId = await sendAndConfirmTransaction(
+        connection,
+        preTransaction,
+        [enclaveSigner, switchboardG.verifier.signer],
+        { skipPreflight: true }
+      ).then(async () => {
+        console.log("pre txId", txId);
+        const tx = await program.methods
+          .mintAiNft({
+            nft: {
+              name: [1, 2, 3],
+              symbol: [1, 2, 3],
+              description: [1, 2, 3],
+              image: [1, 2, 3],
+              animationUrl: [1, 2, 3],
+              externalUrl: [1, 2, 3],
+            },
+          })
+          .accounts({
+            function: functionAccountG.publicKey,
+            oracle: oraclePda,
+            enclaveSigner: enclaveSigner.publicKey,
+            request: requestAccountKeypairG.publicKey,
+          })
+          .signers([enclaveSigner])
+          .rpc();
+        console.log("Your transaction signature", tx);
+      });
     } catch (error) {
       console.log(error);
     }
