@@ -195,7 +195,7 @@ impl MetaplexNftStandard {
     }
     pub fn generate_ixns(self, runner: &FunctionRunner) -> Vec<Instruction> {
         let generate_nft_params = GenerateNftParams { nft: self.into() };
-        let (program_state_pubkey, _) =
+        let (_, _) =
             Pubkey::find_program_address(&[b"ai-nft-generator-oracle"], &ai_nft_generator::ID);
         let (oracle_pubkey, _) =
             Pubkey::find_program_address(&[b"ai-nft-generator-oracle"], &ai_nft_generator::ID);
@@ -217,6 +217,11 @@ impl MetaplexNftStandard {
                     is_signer: true,
                     is_writable: false,
                 },
+                AccountMeta {
+                    pubkey: runner.function_request_key.unwrap(),
+                    is_signer: false,
+                    is_writable: false,
+                }
             ],
             data: [
                 ix_discriminator("mint_ai_nft").to_vec(),

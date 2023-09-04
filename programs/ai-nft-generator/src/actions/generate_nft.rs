@@ -1,5 +1,5 @@
 use crate::*;
-use switchboard_solana::FunctionAccountData;
+use switchboard_solana::{FunctionAccountData, FunctionRequestAccountData};
 
 #[derive(Accounts)]
 pub struct GenerateNft<'info> {
@@ -10,9 +10,18 @@ pub struct GenerateNft<'info> {
     )]
     pub oracle: AccountLoader<'info, MyOracleState>,
     #[account(
-        constraint = function.load()?.validate(&enclave_signer.to_account_info())? @ AiNftGenerateError::FunctionValidationFailed
+        constraint = function.load()?.validate(
+            &enclave_signer.to_account_info()
+        )? @ AiNftGenerateError::FunctionValidationFailed
     )]
     pub function: AccountLoader<'info, FunctionAccountData>,
+    #[account(
+        constraint = request.validate_signer(
+            &function.to_account_info(),
+            &enclave_signer.to_account_info(),
+        )? @ AiNftGenerateError::FunctionValidationFailed
+    )]
+    pub request: Box<Account<'info, FunctionRequestAccountData>>,
     pub enclave_signer: Signer<'info>
 }
 
