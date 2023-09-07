@@ -1,1 +1,22 @@
-solana-test-validator -r --bpf-program SW1TCH7qEPTdLsDHRgPuMQjbQxKdH2aBStViMFnt64f /home/hackerboy/switchboard-programs-devnet/switchboard.so --bpf-program sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx /home/hackerboy/switchboard-programs-devnet/attestation-program.so --account Fi8vncGpNKbq62gPo56G4toCehWNy77GgqGkTaAF5Lkk /home/hackerboy/switchboard-programs-devnet/devnet-idl.json --account CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd /home/hackerboy/switchboard-programs-devnet/sbState.json --account 7hkp1xfPBcD2t1vZMoWWQPzipHVcXeLAAaiGXdPSfDie /home/hackerboy/switchboard-programs-devnet/tokenVaulr.json --account 5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz /home/hackerboy/switchboard-programs-devnet/attestation-idl.json --account 5MFs7RGTjLi1wtKNBFRtuLipCkkjs4YQwRRU9sjnbQbS /home/hackerboy/switchboard-programs-devnet/attestation-state.json
+solana-test-validator -r \
+    --bpf-program \
+        SW1TCH7qEPTdLsDHRgPuMQjbQxKdH2aBStViMFnt64f \
+            switchboard.so \
+    --bpf-program \
+        sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx \
+            attestation-program.so \
+    --account \
+        Fi8vncGpNKbq62gPo56G4toCehWNy77GgqGkTaAF5Lkk \
+            devnet-idl.json \
+    --account \
+        CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd \
+            sbState.json \
+    --account \
+        7hkp1xfPBcD2t1vZMoWWQPzipHVcXeLAAaiGXdPSfDie \
+            tokenVaulr.json \
+    --account \
+        5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz \
+            attestation-idl.json \
+    --account \
+        5MFs7RGTjLi1wtKNBFRtuLipCkkjs4YQwRRU9sjnbQbS \
+            attestation-state.json

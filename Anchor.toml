@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-ai_nft_generator = "9zFjUs3LhY39t7HbJWMBFt6VrBMktVzbvBXAjFo7V8yS"
+ai_nft_generator = "CvPJsEqiyf53UA1mnFq9Uib6Yy29MVJRgketa81Fx8tG"
 
 [registry]
 url = "https://api.apr.dev"
