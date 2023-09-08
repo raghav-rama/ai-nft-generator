@@ -13,7 +13,7 @@ solana-test-validator -r \
             sbState.json \
     --account \
         7hkp1xfPBcD2t1vZMoWWQPzipHVcXeLAAaiGXdPSfDie \
-            tokenVaulr.json \
+            tokenVault.json \
     --account \
         5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz \
             attestation-idl.json \

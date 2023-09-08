@@ -9,7 +9,7 @@ pub use actions::*;
 pub mod error;
 pub use error::*;
 
-declare_id!("CvPJsEqiyf53UA1mnFq9Uib6Yy29MVJRgketa81Fx8tG");
+declare_id!("8KRr8JmQurR7cGBvEoqo258ojNcRhHrYaW7JUgs6aQzo");
 
 pub const PROGRAM_SEED: &[u8] = b"ai-nft-generator";
 
